@@ -26,17 +26,25 @@ export default function TabLayout() {
           default: {},
         }),
       }}>
+
+      <Tabs.Screen
+        name="collection"
+        options={{
+          title: 'Словник',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="collections-bookmark" color={color} />,
+        }}
+      />
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: 'Вивчення',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
+          title: 'Бібліотека',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
       />
