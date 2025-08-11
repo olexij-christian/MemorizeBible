@@ -4,10 +4,15 @@ import { View, Text, FlatList, StyleSheet, Pressable, Alert } from 'react-native
 import { ThemedText } from '@/components/ThemedText';
 import { getVersesList } from '@/utils/BibleVerses';
 
+import { useSQLiteContext } from "expo-sqlite";
+
+let db
+
 const data = getVersesList();
 
-const handlePress = (verseString) => {
-  Alert.alert('Додати вірш в план', verseString, [{
+const onPressVerse = async (verseString) => {
+  const allRows = await db.getAllAsync('SELECT * FROM verses')
+  Alert.alert('Додати вірш в план', verseString + "\n " + allRows.length, [{
     text: "Відмінити",
   }, {
     text: "Додати",
@@ -15,6 +20,7 @@ const handlePress = (verseString) => {
 };
 
 export default function BibleVersesLibrary() {
+  db = useSQLiteContext();
   return (
     <View style={styles.container}>
       <ThemedText style={styles.title} type="title">Додай віршів у план вивчення 📚</ThemedText>
@@ -23,7 +29,7 @@ export default function BibleVersesLibrary() {
         keyExtractor={(item, index) => index.toString()}
         numColumns={1}
         renderItem={({ item }) => (
-          <Pressable style={styles.item} onPress={() => handlePress(item)}>
+          <Pressable style={styles.item} onPress={() => onPressVerse(item)}>
             <Text style={styles.itemText}>{item}</Text>
           </Pressable>
         )}
