@@ -1,26 +1,29 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, Pressable, Alert } from 'react-native';
+import { router } from 'expo-router'
 
 import { ThemedText } from '@/components/ThemedText';
 import { getVersesList } from '@/utils/BibleVerses';
 
 import { useSQLiteContext } from "expo-sqlite";
 
-let db
-
-const data = getVersesList();
-
-const onPressVerse = async (verseString) => {
-  const allRows = await db.getAllAsync('SELECT * FROM verses')
-  Alert.alert('Додати вірш в план', verseString + "\n " + allRows.length, [{
-    text: "Відмінити",
-  }, {
-    text: "Додати",
-  }]);
-};
-
 export default function BibleVersesLibrary() {
-  db = useSQLiteContext();
+  const db = useSQLiteContext();
+  const data = getVersesList();
+
+  const onPressVerse = async (verseString) => {
+    const allRows = await db.getAllAsync('SELECT * FROM verses')
+    Alert.alert('Додати вірш в план', verseString + "\n " + allRows.length, [{
+      text: "Відмінити",
+    }, {
+      text: "Додати",
+    }]);
+  };
+
+  const addItem = () => {
+    router.push("/new_verse");
+  }
+
   return (
     <View style={styles.container}>
       <ThemedText style={styles.title} type="title">Додай віршів у план вивчення 📚</ThemedText>
@@ -34,6 +37,10 @@ export default function BibleVersesLibrary() {
           </Pressable>
         )}
       />
+
+      <Pressable style={styles.fab} onPress={addItem}>
+        <Text style={styles.fabText}>+</Text>
+      </Pressable>
     </View>
   );
 }
@@ -59,6 +66,23 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 16,
+  },
+  fab: {
+    position: 'absolute',
+    bottom: 30,
+    right: 30,
+    backgroundColor: '#2196F3',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 5,
+  },
+  fabText: { 
+    color: '#fff',
+    fontSize: 30,
+    marginBottom: 2,
   },
 });
 
